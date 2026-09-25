@@ -71,7 +71,7 @@
     .glass-console {
       background: rgba(11, 17, 32, 0.82);
       backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(200px);
+      -webkit-backdrop-filter: blur(24px);
       border: 1px solid rgba(255, 255, 255, 0.2);
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
     }
@@ -88,6 +88,10 @@
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.18);
     }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #050A18; }
+    ::-webkit-scrollbar-thumb { background: #1E293B; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #F5BE58; }
   </style>
 </head>
 <body class="antialiased selection:bg-brand-gold selection:text-brand-dark">
@@ -169,6 +173,10 @@
             <i class="fa-solid fa-power-off"></i>
           </button>
         </div>
+
+        <button onclick="toggleChatbot()" class="w-9 h-9 rounded-xl glass-chip flex items-center justify-center text-amber-400 hover:bg-amber-400 hover:text-black transition shadow-md" title="AI Assistant">
+          <i class="fa-solid fa-robot text-sm"></i>
+        </button>
 
         <button onclick="toggleMobileNav()" class="lg:hidden w-9 h-9 rounded-xl glass-chip flex items-center justify-center text-white text-base">
           <i class="fa-solid fa-bars"></i>
@@ -255,16 +263,16 @@
         <div class="relative z-10 w-full max-w-4xl mx-auto text-center">
           <div class="inline-flex items-center gap-2 py-1.5 px-3.5 rounded-full glass-chip text-amber-400 text-xs font-semibold uppercase tracking-widest mb-6 shadow-md">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            Guwahati's Verified Housing Network &bull; 
+            Guwahati's Verified Housing Network &bull; Cloud Synced
           </div>
 
           <h1 class="font-heading text-4xl sm:text-6xl lg:text-7xl font-black leading-tight mb-4 tracking-tight text-white drop-shadow-xl">
-            আপোনাৰ সপোন আপোনাৰ ঘৰ,, <br>
-            <span class="text-amber-400">Find a place that feels like home.</span>
+            Curated Spaces, <br>
+            <span class="text-amber-400">Elevated Living.</span>
           </h1>
 
           <p class="text-gray-200 text-sm sm:text-base max-w-2xl mx-auto mb-8 font-medium leading-relaxed drop-shadow">
-            Verified luxury apartments, bungalows, and prime residential plots across Guwahati.
+            Verified luxury apartments, bungalows, and prime residential plots across Barnachal Path, Anuradha, Zoo Road & Chandmari.
           </p>
 
           <!-- CRYSTAL FROSTED GLASS SEARCH CONSOLE -->
@@ -437,7 +445,7 @@
 
     </div>
 
-    <!-- 2. OWNER DASHBOARD -->
+    <!-- 2. OWNER DASHBOARD (WITH GALLERY UPLOAD FOR 4+ PHOTOS) -->
     <div id="viewOwnerDashboard" class="hidden w-full max-w-6xl mx-auto px-4 py-12">
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-white/10 pb-5 mb-8 gap-4">
         <div>
@@ -500,7 +508,7 @@
         <h3 class="font-heading text-lg font-bold text-white mb-1.5 flex items-center gap-2">
           <i class="fa-solid fa-cloud-arrow-up text-amber-400"></i> Upload New Property To Cloud
         </h3>
-        <p class="text-xs text-gray-300 mb-6">Please provide accurate details. All customer inquiries are centrally handled by Aastha Enterprises.</p>
+        <p class="text-xs text-gray-300 mb-6">Select photos directly from your phone gallery or camera (supports 4+ HD photos).</p>
 
         <form onsubmit="handleOwnerUpload(event)" class="space-y-5">
           <div class="p-4 rounded-2xl bg-black/40 border border-amber-400/30 mb-4">
@@ -571,10 +579,28 @@
             </div>
           </div>
 
-          <div>
-            <label class="block text-xs uppercase text-gray-300 font-semibold mb-1">Multiple Photo URLs (Comma Separated) *</label>
-            <textarea id="propPhotos" rows="2" placeholder="https://images.unsplash.com/photo-1..., https://..." class="w-full bg-black/40 border border-white/20 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400"></textarea>
-            <span class="text-[10px] text-gray-400">Paste multiple image links separated by commas.</span>
+          <!-- DIRECT GALLERY UPLOAD SECTION (SELECT 4+ PHOTOS) -->
+          <div class="p-4 rounded-2xl bg-black/40 border border-white/15">
+            <label class="block text-xs uppercase text-amber-400 font-bold mb-2 flex items-center justify-between">
+              <span><i class="fa-solid fa-images mr-1.5"></i> Upload Photos From Gallery (Select 4+ Pics)</span>
+              <span id="photoCountBadge" class="text-[10px] text-gray-400 font-normal">0 photos chosen</span>
+            </label>
+            
+            <input type="file" id="galleryFileInput" multiple accept="image/*" class="hidden" onchange="handleGalleryFiles(event)">
+            
+            <button type="button" onclick="document.getElementById('galleryFileInput').click()" class="w-full py-4 border-2 border-dashed border-amber-400/40 hover:border-amber-400 rounded-2xl text-center bg-white/[0.02] hover:bg-white/[0.05] transition cursor-pointer flex flex-col items-center justify-center gap-1.5">
+              <i class="fa-solid fa-cloud-arrow-up text-2xl text-amber-400"></i>
+              <span class="text-xs font-semibold text-white">Tap here to choose photos from Gallery / Camera</span>
+              <span class="text-[10px] text-gray-400">You can select multiple photos at once</span>
+            </button>
+
+            <!-- Thumbnails Preview Grid -->
+            <div id="galleryPreviewContainer" class="flex flex-wrap gap-2.5 mt-3 empty:hidden"></div>
+
+            <!-- Optional External URL Fallback -->
+            <div class="mt-3 pt-3 border-t border-white/10">
+              <input type="text" id="propPhotosUrl" placeholder="Or paste external image URLs separated by comma (optional)..." class="w-full bg-black/30 border border-white/10 rounded-xl px-3 py-2 text-[11px] text-gray-300 focus:outline-none focus:border-amber-400">
+            </div>
           </div>
 
           <div>
@@ -745,7 +771,7 @@
 
       <div class="relative h-64 sm:h-96 w-full overflow-hidden bg-brand-dark">
         <img id="modalImg" src="" alt="Property" class="w-full h-full object-cover">
-        <div class="absolute bottom-4 left-4 flex gap-2" id="modalThumbnails"></div>
+        <div class="absolute bottom-4 left-4 right-4 flex gap-2 overflow-x-auto pb-1" id="modalThumbnails"></div>
       </div>
 
       <div class="p-5 sm:p-8">
@@ -796,6 +822,44 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- ================= FLOATING AI CHATBOT ================= -->
+  <div id="aiChatbot" class="hidden fixed bottom-6 right-4 sm:right-6 w-[92vw] sm:w-96 glass-sheet rounded-3xl shadow-2xl z-50 flex flex-col h-[490px] overflow-hidden border border-white/20">
+    <div class="bg-black/60 p-3.5 border-b border-white/10 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-xl bg-amber-400 text-black flex items-center justify-center font-bold text-sm shadow-md">
+          <i class="fa-solid fa-robot"></i>
+        </div>
+        <div>
+          <div class="text-xs font-bold text-white">Aastha AI Concierge</div>
+          <div class="text-[9px] text-emerald-400 flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Online &bull; Guwahati Desk
+          </div>
+        </div>
+      </div>
+      <button onclick="toggleChatbot()" class="text-gray-400 hover:text-white px-2 text-lg">&times;</button>
+    </div>
+
+    <div id="chatMessages" class="flex-1 p-3.5 overflow-y-auto space-y-3 text-xs">
+      <div class="bg-black/50 p-3 rounded-2xl border border-white/10 text-gray-200">
+        Hello! Welcome to <strong>Aastha Enterprises</strong>.
+        <br><br>
+        Ask me anything regarding properties, locations in Guwahati, scheduling visits, or direct owner inquiries!
+      </div>
+      <div class="flex flex-wrap gap-1.5 pt-1">
+        <button onclick="sendQuickPrompt('Office address?')" class="text-[10px] glass-chip px-2.5 py-1 rounded-lg text-amber-300 hover:bg-white/10">📍 Office Address</button>
+        <button onclick="sendQuickPrompt('Helpline contact number?')" class="text-[10px] glass-chip px-2.5 py-1 rounded-lg text-amber-300 hover:bg-white/10">📞 Phone / WhatsApp</button>
+        <button onclick="sendQuickPrompt('How to list my house?')" class="text-[10px] glass-chip px-2.5 py-1 rounded-lg text-amber-300 hover:bg-white/10">🏠 List House</button>
+      </div>
+    </div>
+
+    <form onsubmit="handleChatSubmit(event)" class="p-2.5 bg-black/60 border-t border-white/10 flex gap-2">
+      <input type="text" id="chatInput" placeholder="Ask about apartments, rates, locations..." class="flex-1 bg-black/40 border border-white/20 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400">
+      <button type="submit" class="gold-btn px-3 py-2 rounded-xl text-xs">
+        <i class="fa-solid fa-paper-plane"></i>
+      </button>
+    </form>
   </div>
 
   <!-- ================= WRITE REVIEW MODAL ================= -->
@@ -934,6 +998,9 @@
     let currentUser = JSON.parse(localStorage.getItem('aastha_active_user')) || null;
     let selectedDeal = 'All';
 
+    // Staging array for gallery photo uploads (Base64 data)
+    let selectedGalleryBase64 = [];
+
     let deletedPropertyIds = JSON.parse(localStorage.getItem('aastha_deleted_ids')) || [];
     let pendingDeletePropertyId = null;
 
@@ -966,7 +1033,10 @@
         renderHomeProperties(properties);
         updateDashboardViews();
       }, (err) => {
-        console.warn("Firestore sync fallback active:", err);
+        console.error("Firestore sync error:", err);
+        if (err.code === 'permission-denied') {
+          showToast("Firebase Rules Locked! Publish rules in Firebase Console.", "error");
+        }
         properties = defaultSeed.filter(item => !deletedPropertyIds.includes(item.id));
         renderHomeProperties(properties);
         updateDashboardViews();
@@ -999,7 +1069,81 @@
     }
 
     /* =======================================================
-       3. INSTANT ZERO-WAIT DELETE ENGINE
+       3. GALLERY MULTI-PHOTO UPLOAD & COMPRESSION (4+ PHOTOS)
+    ======================================================= */
+    async function handleGalleryFiles(e) {
+      const files = Array.from(e.target.files);
+      if (!files.length) return;
+
+      showToast(`Optimizing ${files.length} photos from gallery...`);
+      for (let file of files) {
+        try {
+          const base64 = await compressImageFile(file);
+          selectedGalleryBase64.push(base64);
+        } catch (err) {
+          console.error("Error reading photo:", err);
+        }
+      }
+      renderGalleryPreview();
+    }
+
+    function compressImageFile(file) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+            const maxDimension = 950;
+
+            if (width > height && width > maxDimension) {
+              height = Math.round((height * maxDimension) / width);
+              width = maxDimension;
+            } else if (height > maxDimension) {
+              width = Math.round((width * maxDimension) / height);
+              height = maxDimension;
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', 0.7));
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function renderGalleryPreview() {
+      const container = document.getElementById('galleryPreviewContainer');
+      const badge = document.getElementById('photoCountBadge');
+      container.innerHTML = '';
+      badge.innerText = `${selectedGalleryBase64.length} photo(s) ready`;
+
+      selectedGalleryBase64.forEach((b64, index) => {
+        const thumbDiv = document.createElement('div');
+        thumbDiv.className = "relative w-16 h-16 rounded-xl overflow-hidden border border-amber-400/50 group";
+        thumbDiv.innerHTML = `
+          <img src="${b64}" class="w-full h-full object-cover">
+          <button type="button" onclick="removeGalleryPhoto(${index})" class="absolute top-1 right-1 w-5 h-5 bg-red-600/90 text-white rounded-full flex items-center justify-center text-[10px] hover:bg-red-500">
+            &times;
+          </button>
+        `;
+        container.appendChild(thumbDiv);
+      });
+    }
+
+    function removeGalleryPhoto(index) {
+      selectedGalleryBase64.splice(index, 1);
+      renderGalleryPreview();
+    }
+
+    /* =======================================================
+       4. INSTANT ZERO-WAIT DELETE ENGINE
     ======================================================= */
     function openDeleteConfirmModal(id) {
       pendingDeletePropertyId = id;
@@ -1050,7 +1194,7 @@
     }
 
     /* =======================================================
-       4. KING ADMIN & AUTHENTICATION
+       5. KING ADMIN & AUTHENTICATION
     ======================================================= */
     function triggerKingAdmin() {
       if (currentUser && currentUser.role === 'admin') {
@@ -1202,7 +1346,7 @@
     }
 
     /* =======================================================
-       5. VIEW SWITCHING
+       6. VIEW SWITCHING
     ======================================================= */
     function switchView(viewName) {
       document.getElementById('viewHome').classList.add('hidden');
@@ -1232,7 +1376,7 @@
     }
 
     /* =======================================================
-       6. HOMEPAGE RENDER (PHOTO BACKGROUND + FLOATING GLASS SHEET)
+       7. HOMEPAGE RENDER (PHOTO BACKGROUND + FLOATING GLASS POPUP)
     ======================================================= */
     function renderHomeProperties(list) {
       const grid = document.getElementById('homeGrid');
@@ -1245,8 +1389,10 @@
         return;
       }
 
+      const defaultCover = 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80';
+
       list.forEach(item => {
-        const cover = (item.photos && item.photos.length > 0) ? item.photos[0] : 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80';
+        const cover = (item.photos && item.photos.length > 0 && item.photos[0]) ? item.photos[0] : defaultCover;
         
         const waMsg = encodeURIComponent(`Hello Aastha Enterprises,
 I am interested in this property:
@@ -1257,11 +1403,12 @@ I am interested in this property:
 Please share site-visit availability.`);
         const waLink = `https://wa.me/916003523175?text=${waMsg}`;
 
+        // REAL FROSTED GLASS SCREEN OVER HD PHOTO
         const card = document.createElement('div');
         card.className = "relative h-[460px] sm:h-[480px] rounded-3xl overflow-hidden group shadow-2xl border border-white/20 transition-all duration-300 hover:-translate-y-1.5";
         card.innerHTML = `
-          <!-- Full HD Photo Background -->
-          <img src="${cover}" alt="${item.title}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-700">
+          <!-- Full HD Photo Background with safe fallback -->
+          <img src="${cover}" alt="${item.title}" onerror="this.onerror=null;this.src='${defaultCover}';" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-700">
           <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-black/30"></div>
 
           <!-- Top Status Badges -->
@@ -1281,7 +1428,7 @@ Please share site-visit availability.`);
               <span>${item.area || 'Spacious'}</span>
             </div>
             
-            <h3 class="font-heading text-base sm:text-lg font-bold text-white mb-1 line-clamp-1" onclick="openPropModal('${item.id}')">
+            <h3 class="font-heading text-base sm:text-lg font-bold text-white mb-1 line-clamp-1 cursor-pointer hover:text-amber-400 transition" onclick="openPropModal('${item.id}')">
               ${item.title}
             </h3>
             
@@ -1296,7 +1443,7 @@ Please share site-visit availability.`);
                 <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
               </a>
               <button onclick="openPropModal('${item.id}')" class="px-4 py-2.5 glass-chip hover:bg-white/20 text-amber-300 font-bold rounded-xl text-xs transition">
-                Details
+                Details (${item.photos ? item.photos.length : 1} 📷)
               </button>
             </div>
           </div>
@@ -1331,7 +1478,7 @@ Please share site-visit availability.`);
     }
 
     /* =======================================================
-       7. DASHBOARDS LOGIC
+       8. DASHBOARDS LOGIC
     ======================================================= */
     function updateDashboardViews() {
       if (currentUser && currentUser.role === 'owner') {
@@ -1436,7 +1583,7 @@ Please share site-visit availability.`);
     }
 
     /* =======================================================
-       8. OWNER UPLOAD HANDLER (DIRECT WRITE TO FIRESTORE)
+       9. OWNER UPLOAD HANDLER (SUPPORTS 4+ GALLERY PHOTOS)
     ======================================================= */
     async function handleOwnerUpload(e) {
       e.preventDefault();
@@ -1455,13 +1602,19 @@ Please share site-visit availability.`);
       const area = document.getElementById('propArea').value.trim();
       const loc = document.getElementById('propLoc').value.trim();
       const desc = document.getElementById('propDesc').value.trim();
-      const rawPhotos = document.getElementById('propPhotos').value;
+      const rawUrlPhotos = document.getElementById('propPhotosUrl').value;
 
       const checkedAmenities = Array.from(document.querySelectorAll('input[name="amenity"]:checked')).map(cb => cb.value);
 
-      let photos = rawPhotos.split(',').map(s => s.trim()).filter(s => s.length > 5);
-      if (photos.length === 0) {
-        photos = ["https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80"];
+      // Merge gallery photos with any typed URLs
+      let finalPhotos = [...selectedGalleryBase64];
+      if (rawUrlPhotos) {
+        const urlArray = rawUrlPhotos.split(',').map(s => s.trim()).filter(s => s.length > 5);
+        finalPhotos = finalPhotos.concat(urlArray);
+      }
+
+      if (finalPhotos.length === 0) {
+        finalPhotos = ["https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80"];
       }
 
       const newListing = {
@@ -1478,23 +1631,31 @@ Please share site-visit availability.`);
         location: loc,
         desc: desc || 'Verified luxury listing under Aastha Enterprises Guwahati.',
         amenities: checkedAmenities,
-        photos,
+        photos: finalPhotos,
         createdAt: new Date().toISOString()
       };
 
       try {
         const docRef = await db.collection("properties").add(newListing);
         newListing.id = docRef.id;
-        showToast("🎉 Property is live in cloud! Visible across all phones.");
+        showToast(`🎉 Property with ${finalPhotos.length} photos live in cloud!`);
         e.target.reset();
+        selectedGalleryBase64 = [];
+        renderGalleryPreview();
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } catch (err) {
-        console.error("Cloud write notice:", err);
+        console.error("Cloud write error:", err);
+        if (err.code === 'permission-denied') {
+          showToast("Firestore Rules Locked! Please publish rules in Firebase Console.", "error");
+        } else {
+          showToast("Saved locally: " + err.message, "error");
+        }
         newListing.id = "local_" + Date.now();
         properties.unshift(newListing);
-        showToast("Saved locally (check Firestore Rules if cloud sync is delayed).");
         updateDashboardViews();
         e.target.reset();
+        selectedGalleryBase64 = [];
+        renderGalleryPreview();
       } finally {
         btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Upload & Sync to Cloud`;
         btn.disabled = false;
@@ -1502,7 +1663,7 @@ Please share site-visit availability.`);
     }
 
     /* =======================================================
-       9. CONTACT LEAD HANDLER
+       10. CONTACT LEAD HANDLER
     ======================================================= */
     async function handleContactLead(e) {
       e.preventDefault();
@@ -1533,7 +1694,7 @@ Query: ${msg}`);
     }
 
     /* =======================================================
-       10. PROPERTY MODAL DETAIL VIEW
+       11. PROPERTY DETAIL MODAL (MULTI-PHOTO CAROUSEL)
     ======================================================= */
     function openPropModal(id) {
       const item = properties.find(p => p.id === id);
@@ -1557,7 +1718,7 @@ Query: ${msg}`);
       photos.forEach(url => {
         const thumb = document.createElement('img');
         thumb.src = url;
-        thumb.className = "w-12 h-12 object-cover rounded-lg border-2 border-amber-400/60 cursor-pointer hover:opacity-80 transition";
+        thumb.className = "w-14 h-14 object-cover rounded-xl border-2 border-amber-400/60 cursor-pointer hover:opacity-80 shrink-0 transition";
         thumb.onclick = () => { mainImg.src = url; };
         thumbContainer.appendChild(thumb);
       });
@@ -1588,7 +1749,54 @@ Location: ${item.location}
     }
 
     /* =======================================================
-       11. REVIEWS SYSTEM
+       12. AI CHATBOT FUNCTIONALITY
+    ======================================================= */
+    function toggleChatbot() {
+      document.getElementById('aiChatbot').classList.toggle('hidden');
+    }
+
+    function sendQuickPrompt(promptText) {
+      document.getElementById('chatInput').value = promptText;
+      handleChatSubmit(new Event('submit'));
+    }
+
+    function handleChatSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim().toLowerCase();
+      if (!text) return;
+
+      appendChatMsg(input.value, true);
+      input.value = '';
+
+      setTimeout(() => {
+        let ans = "Thank you for reaching out! For direct site visits and verified Guwahati properties, call or WhatsApp our central desk at +91 6003523175.";
+        if (text.includes("address") || text.includes("location") || text.includes("office") || text.includes("where")) {
+          ans = "📍 Our headquarters address is:\nAnuradha Barnachal Path, Guwahati, Assam - 781021.";
+        } else if (text.includes("phone") || text.includes("number") || text.includes("whatsapp") || text.includes("call") || text.includes("contact")) {
+          ans = "📞 Direct Helpline / WhatsApp Hotline:\nReach our central desk 24/7 at +91 6003523175.";
+        } else if (text.includes("flat") || text.includes("bhk") || text.includes("price") || text.includes("rate") || text.includes("rent") || text.includes("buy")) {
+          ans = `Currently ${properties.length} verified luxury properties are active in our Guwahati portfolio. Use the top filter console to browse 2BHK, 3BHK, or luxury villas.`;
+        } else if (text.includes("list") || text.includes("owner") || text.includes("sell") || text.includes("post")) {
+          ans = "To list your house, click 'Owner Register' at the top bar. You can upload 4+ photos directly from your phone gallery with verified pricing.";
+        }
+        appendChatMsg(ans, false);
+      }, 400);
+    }
+
+    function appendChatMsg(msg, isUser) {
+      const box = document.getElementById('chatMessages');
+      const div = document.createElement('div');
+      div.className = isUser 
+        ? "bg-amber-400 text-black p-3 rounded-2xl ml-auto max-w-[85%] font-semibold text-right shadow-md"
+        : "bg-black/80 text-gray-200 p-3 rounded-2xl mr-auto max-w-[85%] border border-white/10 whitespace-pre-line leading-relaxed";
+      div.innerText = msg;
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    /* =======================================================
+       13. REVIEWS SYSTEM
     ======================================================= */
     function renderReviews() {
       const container = document.getElementById('reviewsGrid');
