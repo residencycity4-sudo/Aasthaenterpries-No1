@@ -850,7 +850,7 @@
                 <th class="p-3 sm:p-4 text-right">Quick Contact</th>
               </tr>
             </thead>
-            <tbody id="adminLeadsTbody" class="divide-y divide-white/5"></tbody>
+            <tbody id="adminLeadsTbody" class="divide-y border-white/5"></tbody>
           </table>
         </div>
       </div>
@@ -895,8 +895,13 @@
         <!-- Ambient Blur Glow for Depth -->
         <img id="modalBgBlur" src="" alt="" class="absolute inset-0 w-full h-full object-cover filter blur-2xl opacity-35 scale-110 pointer-events-none transition-all duration-500">
         
-        <!-- Main Property Photo (Full View - Contain with Zero Crop) -->
-        <img id="modalImg" src="" alt="Property" class="relative z-10 max-h-full max-w-full w-auto h-auto object-contain transition-all duration-300 drop-shadow-2xl">
+        <!-- Main Property Photo (Full View - Tap To Open Fullscreen) -->
+        <img id="modalImg" src="" alt="Property" onclick="openFullscreenPhoto()" title="Tap to view Full Screen" class="relative z-10 max-h-full max-w-full w-auto h-auto object-contain cursor-zoom-in transition-all duration-300 drop-shadow-2xl hover:scale-[1.01]">
+
+        <!-- Fullscreen Tap Hint Badge -->
+        <button type="button" onclick="openFullscreenPhoto()" class="absolute top-4 right-16 z-20 px-2.5 py-1 rounded-full text-[10px] font-bold bg-black/70 hover:bg-amber-400 hover:text-black text-gray-200 border border-white/20 backdrop-blur-md flex items-center gap-1.5 transition">
+          <i class="fa-solid fa-expand text-xs"></i> <span>Full Screen</span>
+        </button>
 
         <!-- Slide Navigation Arrows -->
         <button type="button" onclick="prevSlide()" class="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/70 hover:bg-amber-400 hover:text-black text-white flex items-center justify-center transition backdrop-blur-md shadow-xl border border-white/20" title="Previous Photo">
@@ -963,6 +968,38 @@
           </a>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- ================= 🔍 FULLSCREEN LIGHTBOX PHOTO VIEWER ================= -->
+  <div id="fullscreenPhotoModal" class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-black/95 backdrop-blur-xl select-none">
+    
+    <!-- Close Fullscreen Button -->
+    <button type="button" onclick="closeFullscreenPhoto()" class="absolute top-5 right-5 z-50 w-11 h-11 rounded-full bg-white/10 hover:bg-amber-400 hover:text-black text-white flex items-center justify-center transition border border-white/20 text-lg shadow-2xl">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <!-- Fullscreen Slide Counter Indicator -->
+    <div id="fsSlideCounter" class="absolute top-5 left-5 z-50 px-3.5 py-1.5 rounded-full text-xs font-bold bg-white/10 text-amber-400 border border-amber-400/40 backdrop-blur-md font-mono">
+      1 / 1
+    </div>
+
+    <!-- Navigation Arrows -->
+    <button type="button" onclick="prevSlide()" class="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-50 w-12 h-12 rounded-full bg-white/10 hover:bg-amber-400 hover:text-black text-white flex items-center justify-center transition border border-white/20 backdrop-blur-md shadow-2xl">
+      <i class="fa-solid fa-chevron-left text-base"></i>
+    </button>
+    <button type="button" onclick="nextSlide()" class="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-50 w-12 h-12 rounded-full bg-white/10 hover:bg-amber-400 hover:text-black text-white flex items-center justify-center transition border border-white/20 backdrop-blur-md shadow-2xl">
+      <i class="fa-solid fa-chevron-right text-base"></i>
+    </button>
+
+    <!-- Fullscreen Photo Image Container -->
+    <div id="fsImageContainer" class="relative w-full h-full flex items-center justify-center p-3 sm:p-6 overflow-hidden">
+      <img id="fullscreenImg" src="" alt="Full Screen Property Photo" class="max-w-[95vw] max-h-[90vh] object-contain drop-shadow-2xl transition-all duration-300">
+    </div>
+
+    <!-- Bottom Swipe Hint for Mobile -->
+    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 text-[11px] text-gray-400 bg-black/60 px-3 py-1 rounded-full border border-white/10 pointer-events-none">
+      Swipe or use arrows to view all photos
     </div>
   </div>
 
@@ -1144,7 +1181,7 @@
     let selectedGalleryBase64 = [];
     let selectedAdminGalleryBase64 = [];
 
-    // Modal Slider State
+    // Modal Slider & Fullscreen State
     let currentModalPhotos = [];
     let currentSlideIndex = 0;
 
@@ -1164,7 +1201,7 @@
       syncWithFirestore();
       renderReviews();
 
-      // Mobile Touch Swipe Listener for Slider
+      // Mobile Touch Swipe Listener for Normal Modal
       const slider = document.getElementById('modalSliderContainer');
       let touchStartX = 0;
       let touchEndX = 0;
@@ -1179,15 +1216,42 @@
           if (touchEndX > touchStartX + 45) prevSlide();
         }, { passive: true });
       }
+
+      // Mobile Touch Swipe Listener for Fullscreen Lightbox
+      const fsContainer = document.getElementById('fsImageContainer');
+      let fsTouchStartX = 0;
+      let fsTouchEndX = 0;
+      if (fsContainer) {
+        fsContainer.addEventListener('touchstart', (e) => {
+          fsTouchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        fsContainer.addEventListener('touchend', (e) => {
+          fsTouchEndX = e.changedTouches[0].screenX;
+          if (fsTouchEndX < fsTouchStartX - 45) nextSlide();
+          if (fsTouchEndX > fsTouchStartX + 45) prevSlide();
+        }, { passive: true });
+      }
     });
 
     // Keyboard Arrow Keys to Slide Photos & Esc to close
     document.addEventListener('keydown', (e) => {
-      const modal = document.getElementById('propModal');
-      if (modal && !modal.classList.contains('hidden')) {
+      const fsModal = document.getElementById('fullscreenPhotoModal');
+      const propModal = document.getElementById('propModal');
+
+      const isFsOpen = fsModal && !fsModal.classList.contains('hidden');
+      const isPropOpen = propModal && !propModal.classList.contains('hidden');
+
+      if (isFsOpen || isPropOpen) {
         if (e.key === 'ArrowRight') nextSlide();
         if (e.key === 'ArrowLeft') prevSlide();
-        if (e.key === 'Escape') closePropModal();
+        if (e.key === 'Escape') {
+          if (isFsOpen) {
+            closeFullscreenPhoto();
+          } else if (isPropOpen) {
+            closePropModal();
+          }
+        }
       }
     });
 
@@ -1998,7 +2062,7 @@ Query: ${msg}`);
     }
 
     /* =======================================================
-       12. PROPERTY DETAIL MODAL WITH FULL HD SLIDER
+       12. PROPERTY DETAIL MODAL WITH FULL HD SLIDER & FULLSCREEN
     ======================================================= */
     function updateModalSlide() {
       if (!currentModalPhotos || currentModalPhotos.length === 0) return;
@@ -2010,6 +2074,9 @@ Query: ${msg}`);
       mainImg.src = currentUrl;
       if (bgBlur) bgBlur.src = currentUrl;
       if (counter) counter.innerText = `${currentSlideIndex + 1} / ${currentModalPhotos.length}`;
+
+      // Also update Fullscreen Lightbox if it's currently open
+      updateFullscreenSlide();
 
       // Update thumbnail active indicators
       const thumbs = document.querySelectorAll('#modalThumbnails .modal-thumb-item');
@@ -2038,6 +2105,30 @@ Query: ${msg}`);
     function goToSlide(index) {
       currentSlideIndex = index;
       updateModalSlide();
+    }
+
+    /* Fullscreen Lightbox Functions */
+    function openFullscreenPhoto() {
+      if (!currentModalPhotos || currentModalPhotos.length === 0) return;
+      const fsModal = document.getElementById('fullscreenPhotoModal');
+      fsModal.classList.remove('hidden');
+      updateFullscreenSlide();
+    }
+
+    function closeFullscreenPhoto() {
+      const fsModal = document.getElementById('fullscreenPhotoModal');
+      fsModal.classList.add('hidden');
+    }
+
+    function updateFullscreenSlide() {
+      const fsImg = document.getElementById('fullscreenImg');
+      const fsCounter = document.getElementById('fsSlideCounter');
+      if (fsImg && currentModalPhotos[currentSlideIndex]) {
+        fsImg.src = currentModalPhotos[currentSlideIndex];
+      }
+      if (fsCounter) {
+        fsCounter.innerText = `${currentSlideIndex + 1} / ${currentModalPhotos.length}`;
+      }
     }
 
     function openPropModal(id) {
@@ -2090,6 +2181,7 @@ Location: ${item.location}
     }
 
     function closePropModal() {
+      closeFullscreenPhoto();
       document.getElementById('propModal').classList.add('hidden');
     }
 
