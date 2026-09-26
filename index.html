@@ -157,7 +157,7 @@
             Sign In
           </button>
           <button onclick="openAuthModal('signup')" class="gold-btn px-3.5 py-1.5 rounded-xl text-xs flex items-center gap-1 shadow-md">
-            Register
+            Register / Dealer
           </button>
         </div>
 
@@ -187,7 +187,7 @@
           Sign In
         </button>
         <button onclick="openAuthModal('signup'); toggleMobileNav();" class="flex-1 py-2 gold-btn rounded-xl text-xs font-bold">
-          Owner Register
+          Register / Dealer
         </button>
       </div>
       <a href="#propertiesSection" onclick="toggleMobileNav()" class="block py-1.5 text-gray-200">Browse Properties</a>
@@ -201,7 +201,7 @@
     </div>
   </header>
 
-  <!-- ================= AUTH MODAL (LOGIN & SIGN UP) ================= -->
+  <!-- ================= AUTH MODAL (LOGIN & SIGN UP WITH DEALER + COMPANY NAME) ================= -->
   <div id="authModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-2xl">
     <div class="glass-sheet w-full max-w-md rounded-3xl p-6 sm:p-7 shadow-2xl relative border border-white/20">
       <button onclick="closeAuthModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white text-lg">
@@ -229,12 +229,23 @@
           <input type="password" id="authPass" required placeholder="••••••••" class="w-full bg-black/50 border border-white/20 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-brand-gold">
         </div>
 
+        <!-- Role Selector including Dealer/Agent -->
         <div id="authRoleField" class="hidden">
           <label class="block text-[11px] uppercase text-gray-300 font-semibold mb-1">Account Role *</label>
-          <select id="authRole" class="w-full bg-black/50 border border-white/20 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-brand-gold">
+          <select id="authRole" onchange="handleAuthRoleChange()" class="w-full bg-black/50 border border-white/20 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-brand-gold">
             <option value="owner">Property Owner (Sell / Rent House)</option>
+            <option value="dealer">Real Estate Dealer / Agency (Broker / Partner)</option>
             <option value="buyer">Home Buyer / Tenant</option>
           </select>
+        </div>
+
+        <!-- Dynamic Company / Agency Name Field for Dealers -->
+        <div id="authCompanyField" class="hidden">
+          <label class="block text-[11px] uppercase text-amber-400 font-semibold mb-1 flex items-center justify-between">
+            <span>Company / Agency Name *</span>
+            <span class="text-[9px] text-gray-400 font-normal">Dealer Verification</span>
+          </label>
+          <input type="text" id="authCompany" placeholder="e.g. Guwahati Prime Realty & Estates" class="w-full bg-black/50 border border-amber-400/40 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400">
         </div>
 
         <button type="submit" id="authSubmitBtn" class="w-full gold-btn py-3 rounded-xl text-xs font-bold mt-4 shadow-lg">
@@ -259,7 +270,7 @@
         <div class="relative z-10 w-full max-w-4xl mx-auto text-center">
           <div class="inline-flex items-center gap-2 py-1.5 px-3.5 rounded-full glass-chip text-amber-400 text-xs font-semibold uppercase tracking-widest mb-6 shadow-md">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            Guwahati's Verified Housing Network &bull; 
+            Guwahati's Verified Housing Network &bull; Cloud Synced
           </div>
 
           <h1 class="font-heading text-4xl sm:text-6xl lg:text-7xl font-black leading-tight mb-4 tracking-tight text-white drop-shadow-xl">
@@ -268,7 +279,7 @@
           </h1>
 
           <p class="text-gray-200 text-sm sm:text-base max-w-2xl mx-auto mb-8 font-medium leading-relaxed drop-shadow">
-            Verified luxury apartments, bungalows, and prime residential plots across Guwahati
+            Verified luxury apartments, bungalows, and prime residential plots across Guwahati.
           </p>
 
           <!-- CRYSTAL FROSTED GLASS SEARCH CONSOLE -->
@@ -360,7 +371,7 @@
                 <i class="fa-solid fa-crown"></i>
               </div>
               <h4 class="font-heading text-lg font-bold text-white mb-2">Dedicated Real Estate Advisory</h4>
-              <p class="text-xs text-gray-300 leading-relaxed">Professional brokerage and end-to-end site consultation for both property owners and prospective buyers.</p>
+              <p class="text-xs text-gray-300 leading-relaxed">Professional brokerage and end-to-end site consultation for property owners, verified dealers, and prospective buyers.</p>
             </div>
           </div>
         </div>
@@ -397,7 +408,7 @@
                 </div>
                 <div>
                   <div class="text-[10px] uppercase text-gray-400 font-semibold">Headquarters Address</div>
-                  <div class="text-xs sm:text-sm font-semibold text-white">Anuradha Barnachal Path, Guwahati, Assam - 781021</div>
+                  <div class="text-xs sm:text-sm font-semibold text-white">Anuradha, Guwahati, Assam - 781021</div>
                 </div>
               </div>
 
@@ -441,7 +452,7 @@
 
     </div>
 
-    <!-- 2. OWNER DASHBOARD -->
+    <!-- 2. OWNER & DEALER PORTAL (SHARED INVENTORY WORKBENCH) -->
     <div id="viewOwnerDashboard" class="hidden w-full max-w-6xl mx-auto px-4 py-12">
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-white/10 pb-5 mb-8 gap-4">
         <div>
@@ -449,8 +460,8 @@
             <i class="fa-solid fa-arrow-left"></i> Back to Homepage
           </button>
           <div class="flex items-center gap-2">
-            <h2 class="font-heading text-2xl sm:text-3xl font-bold text-white">Owner Portal</h2>
-            <span class="px-2.5 py-0.5 rounded-full text-[10px] bg-amber-400/20 text-amber-400 font-mono uppercase">Verified</span>
+            <h2 id="portalHeading" class="font-heading text-2xl sm:text-3xl font-bold text-white">Owner & Partner Portal</h2>
+            <span id="portalRoleBadge" class="px-2.5 py-0.5 rounded-full text-[10px] bg-amber-400/20 text-amber-400 font-mono uppercase font-bold">Verified Partner</span>
           </div>
           <p class="text-xs text-gray-300 mt-1" id="ownerWelcomeSubtitle">Manage your properties in Guwahati.</p>
         </div>
@@ -459,7 +470,7 @@
         </button>
       </div>
 
-      <!-- Owner Stats -->
+      <!-- Stats -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         <div class="glass-sheet p-5 rounded-2xl">
           <div class="text-gray-300 text-xs">My Published Listings</div>
@@ -477,7 +488,7 @@
         </div>
       </div>
 
-      <!-- Owner's Own Properties Table -->
+      <!-- Properties Table -->
       <div class="glass-sheet rounded-2xl overflow-hidden mb-10 shadow-xl">
         <div class="p-4 border-b border-white/10 flex items-center justify-between">
           <h4 class="text-xs uppercase tracking-wider font-bold text-white">My Properties Portfolio</h4>
@@ -509,16 +520,16 @@
         <form onsubmit="handleOwnerUpload(event)" class="space-y-5">
           <div class="p-4 rounded-2xl bg-black/40 border border-amber-400/30 mb-4">
             <div class="text-xs font-bold text-amber-400 flex items-center gap-2 mb-2.5">
-              <i class="fa-solid fa-id-card-clip"></i> Owner Identity & Direct Number (Confidential)
+              <i class="fa-solid fa-id-card-clip"></i> Partner / Owner Identity & Direct Number (Confidential)
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div>
-                <label class="block text-[11px] uppercase text-gray-300 font-semibold mb-1">Owner Real Name *</label>
-                <input type="text" id="propOwnerName" required placeholder="Full Name of Property Owner" class="w-full bg-[#030712] border border-white/20 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400">
+                <label class="block text-[11px] uppercase text-gray-300 font-semibold mb-1">Contact Person Name *</label>
+                <input type="text" id="propOwnerName" required placeholder="Full Name of Owner / Dealer" class="w-full bg-[#030712] border border-white/20 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400">
               </div>
               <div>
-                <label class="block text-[11px] uppercase text-gray-300 font-semibold mb-1">Owner Contact Number *</label>
-                <input type="tel" id="propOwnerPhone" required placeholder="Owner WhatsApp / Mobile Number" class="w-full bg-[#030712] border border-white/20 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400">
+                <label class="block text-[11px] uppercase text-gray-300 font-semibold mb-1">Direct Mobile / WhatsApp Number *</label>
+                <input type="tel" id="propOwnerPhone" required placeholder="10-Digit Mobile Number" class="w-full bg-[#030712] border border-white/20 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400">
               </div>
             </div>
             <p class="text-[10px] text-gray-400 mt-2">Notice: Your direct contact number is securely stored in Aastha Enterprises database for verification.</p>
@@ -571,7 +582,7 @@
             </div>
             <div>
               <label class="block text-xs uppercase text-gray-300 font-semibold mb-1">Location in Guwahati *</label>
-              <input type="text" id="propLoc" required placeholder="e.g. Anuradha Barnachal Path, Guwahati" class="w-full bg-black/40 border border-white/20 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400">
+              <input type="text" id="propLoc" required placeholder="e.g. Anuradha, Guwahati" class="w-full bg-black/40 border border-white/20 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400">
             </div>
           </div>
 
@@ -593,7 +604,6 @@
             <!-- Thumbnails Preview Grid -->
             <div id="galleryPreviewContainer" class="flex flex-wrap gap-2.5 mt-3 empty:hidden"></div>
 
-            <!-- Optional External URL Fallback -->
             <div class="mt-3 pt-3 border-t border-white/10">
               <input type="text" id="propPhotosUrl" placeholder="Or paste external image URLs separated by comma (optional)..." class="w-full bg-black/30 border border-white/10 rounded-xl px-3 py-2 text-[11px] text-gray-300 focus:outline-none focus:border-amber-400">
             </div>
@@ -720,7 +730,7 @@
             </div>
             <div>
               <label class="block text-xs uppercase text-gray-300 font-semibold mb-1">Location in Guwahati *</label>
-              <input type="text" id="admPropLoc" required placeholder="e.g. Anuradha Barnachal Path, Guwahati" class="w-full bg-black/40 border border-white/20 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400">
+              <input type="text" id="admPropLoc" required placeholder="e.g. Anuradha, Guwahati" class="w-full bg-black/40 border border-white/20 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400">
             </div>
           </div>
 
@@ -793,21 +803,21 @@
         </div>
 
         <div class="glass-sheet p-4 sm:p-5 rounded-2xl">
-          <div class="text-gray-300 text-xs">Registered Owners</div>
+          <div class="text-gray-300 text-xs">Registered Partners</div>
           <div id="adminStatOwners" class="text-2xl sm:text-3xl font-black text-white mt-1">0</div>
         </div>
 
         <div class="glass-sheet p-4 sm:p-5 rounded-2xl">
           <div class="text-gray-300 text-xs">HQ Office</div>
-          <div class="text-xs sm:text-sm font-bold text-white mt-2 line-clamp-1">Guwahati, Barnachal</div>
+          <div class="text-xs sm:text-sm font-bold text-white mt-2 line-clamp-1">Guwahati, Assam</div>
         </div>
       </div>
 
-      <!-- MASTER INVENTORY & OWNER DIRECTORY TABLE -->
+      <!-- MASTER INVENTORY & OWNER/DEALER DIRECTORY TABLE -->
       <div class="glass-sheet rounded-3xl overflow-hidden mb-10 shadow-2xl">
         <div class="p-4 sm:p-5 border-b border-white/10 flex items-center justify-between">
           <h4 class="font-heading text-sm sm:text-base font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-vault text-amber-400"></i> Master Inventory & Secret Owner Directory
+            <i class="fa-solid fa-vault text-amber-400"></i> Master Inventory & Secret Owner/Dealer Directory
           </h4>
           <span class="text-xs glass-chip px-3 py-1 rounded-full text-amber-400 font-mono" id="adminInvCountBadge">
             0 Listings
@@ -819,7 +829,7 @@
             <thead class="bg-black/60 uppercase text-[10px] text-gray-400 border-b border-white/10 font-mono">
               <tr>
                 <th class="p-3 sm:p-4">Property</th>
-                <th class="p-3 sm:p-4 text-amber-400 font-bold">👤 Owner Details (Confidential)</th>
+                <th class="p-3 sm:p-4 text-amber-400 font-bold">👤 Listed By (Confidential)</th>
                 <th class="p-3 sm:p-4">Category</th>
                 <th class="p-3 sm:p-4">Demand Price</th>
                 <th class="p-3 sm:p-4">Location</th>
@@ -850,7 +860,7 @@
                 <th class="p-3 sm:p-4 text-right">Quick Contact</th>
               </tr>
             </thead>
-            <tbody id="adminLeadsTbody" class="divide-y border-white/5"></tbody>
+            <tbody id="adminLeadsTbody" class="divide-y divide-white/5"></tbody>
           </table>
         </div>
       </div>
@@ -973,18 +983,14 @@
 
   <!-- ================= 🔍 FULLSCREEN LIGHTBOX PHOTO VIEWER ================= -->
   <div id="fullscreenPhotoModal" class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-black/95 backdrop-blur-xl select-none">
-    
-    <!-- Close Fullscreen Button -->
     <button type="button" onclick="closeFullscreenPhoto()" class="absolute top-5 right-5 z-50 w-11 h-11 rounded-full bg-white/10 hover:bg-amber-400 hover:text-black text-white flex items-center justify-center transition border border-white/20 text-lg shadow-2xl">
       <i class="fa-solid fa-xmark"></i>
     </button>
 
-    <!-- Fullscreen Slide Counter Indicator -->
     <div id="fsSlideCounter" class="absolute top-5 left-5 z-50 px-3.5 py-1.5 rounded-full text-xs font-bold bg-white/10 text-amber-400 border border-amber-400/40 backdrop-blur-md font-mono">
       1 / 1
     </div>
 
-    <!-- Navigation Arrows -->
     <button type="button" onclick="prevSlide()" class="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-50 w-12 h-12 rounded-full bg-white/10 hover:bg-amber-400 hover:text-black text-white flex items-center justify-center transition border border-white/20 backdrop-blur-md shadow-2xl">
       <i class="fa-solid fa-chevron-left text-base"></i>
     </button>
@@ -992,12 +998,10 @@
       <i class="fa-solid fa-chevron-right text-base"></i>
     </button>
 
-    <!-- Fullscreen Photo Image Container -->
     <div id="fsImageContainer" class="relative w-full h-full flex items-center justify-center p-3 sm:p-6 overflow-hidden">
       <img id="fullscreenImg" src="" alt="Full Screen Property Photo" class="max-w-[95vw] max-h-[90vh] object-contain drop-shadow-2xl transition-all duration-300">
     </div>
 
-    <!-- Bottom Swipe Hint for Mobile -->
     <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 text-[11px] text-gray-400 bg-black/60 px-3 py-1 rounded-full border border-white/10 pointer-events-none">
       Swipe or use arrows to view all photos
     </div>
@@ -1024,7 +1028,7 @@
       <div class="bg-black/50 p-3 rounded-2xl border border-white/10 text-gray-200">
         Hello! Welcome to <strong>Aastha Enterprises</strong>.
         <br><br>
-        Ask me anything regarding properties, locations in Guwahati, scheduling visits, or direct owner inquiries!
+        Ask me anything regarding properties, locations in Guwahati, scheduling visits, or direct owner/dealer inquiries!
       </div>
       <div class="flex flex-wrap gap-1.5 pt-1">
         <button onclick="sendQuickPrompt('Office address?')" class="text-[10px] glass-chip px-2.5 py-1 rounded-lg text-amber-300 hover:bg-white/10">📍 Office Address</button>
@@ -1317,7 +1321,7 @@
             const canvas = document.createElement('canvas');
             let width = img.width;
             let height = img.height;
-            const maxDimension = 1920; // Full HD Crisp Clarity
+            const maxDimension = 1920;
 
             if (width > height && width > maxDimension) {
               height = Math.round((height * maxDimension) / width);
@@ -1333,7 +1337,7 @@
             ctx.imageSmoothingEnabled = true;
             ctx.imageSmoothingQuality = 'high';
             ctx.drawImage(img, 0, 0, width, height);
-            resolve(canvas.toDataURL('image/jpeg', 0.88)); // Sharp 88% Quality
+            resolve(canvas.toDataURL('image/jpeg', 0.88));
           };
           img.src = e.target.result;
         };
@@ -1473,7 +1477,7 @@
     }
 
     /* =======================================================
-       5. KING ADMIN & AUTHENTICATION
+       5. KING ADMIN & AUTHENTICATION (WITH DEALER & COMPANY NAME)
     ======================================================= */
     function triggerKingAdmin() {
       if (currentUser && currentUser.role === 'admin') {
@@ -1528,6 +1532,7 @@
         tabSignup.className = "text-base font-heading font-bold text-gray-400 pb-1";
         nameField.classList.add('hidden');
         roleField.classList.add('hidden');
+        document.getElementById('authCompanyField').classList.add('hidden');
         submitBtn.innerText = "Sign In";
       } else {
         tabSignup.className = "text-base font-heading font-bold text-white border-b-2 border-brand-gold pb-1";
@@ -1535,6 +1540,17 @@
         nameField.classList.remove('hidden');
         roleField.classList.remove('hidden');
         submitBtn.innerText = "Create Account";
+        handleAuthRoleChange();
+      }
+    }
+
+    function handleAuthRoleChange() {
+      const role = document.getElementById('authRole').value;
+      const companyField = document.getElementById('authCompanyField');
+      if (currentAuthMode === 'signup' && role === 'dealer') {
+        companyField.classList.remove('hidden');
+      } else {
+        companyField.classList.add('hidden');
       }
     }
 
@@ -1544,6 +1560,7 @@
       const pass = document.getElementById('authPass').value.trim();
       const name = document.getElementById('authName').value.trim() || email.split('@')[0];
       const role = document.getElementById('authRole').value;
+      const company = document.getElementById('authCompany').value.trim();
 
       if (pass === 'aastha2026' || email.toLowerCase().includes('admin')) {
         currentUser = { uid: 'king_admin', name: 'Supreme Admin', email, role: 'admin' };
@@ -1561,7 +1578,13 @@
             const userCred = await auth.createUserWithEmailAndPassword(email, pass);
             uid = userCred.user.uid;
           } catch (e) {}
-          currentUser = { uid, name, email, role };
+          currentUser = { 
+            uid, 
+            name, 
+            email, 
+            role, 
+            company: (role === 'dealer' ? (company || 'Independent Dealer') : '') 
+          };
           showToast(`Account created as ${role.toUpperCase()}!`);
         } else {
           try {
@@ -1569,7 +1592,8 @@
             uid = userCred.user.uid;
           } catch (e) {}
           const existingRole = (currentUser && currentUser.email === email) ? currentUser.role : 'owner';
-          currentUser = { uid, name, email, role: existingRole };
+          const existingCompany = (currentUser && currentUser.email === email) ? (currentUser.company || '') : '';
+          currentUser = { uid, name, email, role: existingRole, company: existingCompany };
           showToast(`Welcome back, ${name}!`);
         }
 
@@ -1610,6 +1634,8 @@
 
         if (currentUser.role === 'admin') {
           roleTitle.innerText = "👑 King Console";
+        } else if (currentUser.role === 'dealer') {
+          roleTitle.innerText = "Dealer Portal";
         } else if (currentUser.role === 'owner') {
           roleTitle.innerText = "Owner Dashboard";
         } else {
@@ -1625,7 +1651,7 @@
       }
       if (currentUser.role === 'admin') {
         switchView('adminDashboard');
-      } else if (currentUser.role === 'owner') {
+      } else if (currentUser.role === 'owner' || currentUser.role === 'dealer') {
         switchView('ownerDashboard');
       } else {
         switchView('buyerDashboard');
@@ -1646,7 +1672,24 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else if (viewName === 'ownerDashboard') {
         document.getElementById('viewOwnerDashboard').classList.remove('hidden');
-        document.getElementById('ownerWelcomeSubtitle').innerText = `Logged in as: ${currentUser?.name || 'Owner'} (${currentUser?.email || ''})`;
+        
+        // Personalize Portal for Dealer vs Owner
+        const heading = document.getElementById('portalHeading');
+        const badge = document.getElementById('portalRoleBadge');
+        const subtitle = document.getElementById('ownerWelcomeSubtitle');
+
+        if (currentUser && currentUser.role === 'dealer') {
+          heading.innerText = "Dealer Partner Portal";
+          badge.innerText = "Certified Agency / Dealer";
+          badge.className = "px-2.5 py-0.5 rounded-full text-[10px] bg-blue-500/20 text-blue-400 font-mono uppercase font-bold border border-blue-500/30";
+          subtitle.innerHTML = `Agency: <strong class="text-white">${currentUser.company || 'Channel Partner'}</strong> &bull; Rep: ${currentUser.name} (${currentUser.email})`;
+        } else {
+          heading.innerText = "Property Owner Portal";
+          badge.innerText = "Verified Owner";
+          badge.className = "px-2.5 py-0.5 rounded-full text-[10px] bg-amber-400/20 text-amber-400 font-mono uppercase font-bold border border-amber-400/30";
+          subtitle.innerText = `Logged in as: ${currentUser?.name || 'Owner'} (${currentUser?.email || ''})`;
+        }
+
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else if (viewName === 'adminDashboard') {
         document.getElementById('viewAdminDashboard').classList.remove('hidden');
@@ -1700,7 +1743,7 @@ Please share site-visit availability.`);
 
           <!-- Top Status Badges -->
           <div class="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
-            <div class="flex items-center gap-1.5">
+            <div class="flex items-center gap-1.5 flex-wrap">
               <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider glass-chip text-amber-400">
                 ${item.purpose === 'Rent' ? 'FOR RENT' : 'FOR SALE'}
               </span>
@@ -1708,7 +1751,11 @@ Please share site-visit availability.`);
                 <span class="px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-400 text-black shadow-md flex items-center gap-1">
                   <i class="fa-solid fa-crown text-[9px]"></i> Aastha Exclusive
                 </span>
-              ` : ''}
+              ` : (item.dealerCompany ? `
+                <span class="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-blue-500/80 text-white backdrop-blur-md">
+                  🏢 ${item.dealerCompany}
+                </span>
+              ` : '')}
             </div>
             <span class="bg-amber-400 text-black font-black text-xs px-3.5 py-1.5 rounded-xl shadow-xl">
               ${item.price}
@@ -1775,7 +1822,7 @@ Please share site-visit availability.`);
        8. DASHBOARDS LOGIC
     ======================================================= */
     function updateDashboardViews() {
-      if (currentUser && currentUser.role === 'owner') {
+      if (currentUser && (currentUser.role === 'owner' || currentUser.role === 'dealer')) {
         const myProps = properties.filter(p => p.ownerId === currentUser.uid || p.ownerEmail === currentUser.email);
         document.getElementById('ownerMyListingsCount').innerText = myProps.length;
         document.getElementById('ownerTableBadge').innerText = myProps.length;
@@ -1821,9 +1868,10 @@ Please share site-visit availability.`);
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td class="p-4 font-bold text-white">
-            <div class="flex items-center gap-1.5">
+            <div class="flex items-center gap-1.5 flex-wrap">
               <span>${p.title}</span>
               ${isAasthaDirect ? `<span class="px-2 py-0.5 text-[9px] bg-amber-400 text-black font-extrabold rounded">👑 Aastha Direct</span>` : ''}
+              ${p.dealerCompany ? `<span class="px-2 py-0.5 text-[9px] bg-blue-500/30 text-blue-300 border border-blue-500/40 rounded font-semibold">🏢 ${p.dealerCompany}</span>` : ''}
             </div>
             <span class="block text-[10px] text-gray-400 font-normal">ID: ${p.id}</span>
           </td>
@@ -1881,7 +1929,7 @@ Please share site-visit availability.`);
     }
 
     /* =======================================================
-       9. OWNER UPLOAD HANDLER
+       9. OWNER / DEALER UPLOAD HANDLER
     ======================================================= */
     async function handleOwnerUpload(e) {
       e.preventDefault();
@@ -1914,11 +1962,14 @@ Please share site-visit availability.`);
         finalPhotos = ["https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80"];
       }
 
+      const isDealerUser = (currentUser && currentUser.role === 'dealer');
+
       const newListing = {
         ownerId: currentUser?.uid || "guest_owner",
         ownerEmail: currentUser?.email || "guest@aastha.com",
-        ownerName: ownerName || "Registered Homeowner",
+        ownerName: ownerName || (isDealerUser ? "Registered Dealer" : "Registered Homeowner"),
         ownerPhone: ownerPhone || "Not Provided",
+        dealerCompany: isDealerUser ? (currentUser?.company || 'Verified Agency') : '',
         title,
         purpose,
         price,
@@ -1992,6 +2043,7 @@ Please share site-visit availability.`);
         ownerEmail: "desk@aasthaenterprises.com",
         ownerName: "Aastha Enterprises (Official)",
         ownerPhone: "+91 6003523175",
+        dealerCompany: "Aastha HQ In-House",
         title,
         purpose,
         price,
@@ -2075,10 +2127,8 @@ Query: ${msg}`);
       if (bgBlur) bgBlur.src = currentUrl;
       if (counter) counter.innerText = `${currentSlideIndex + 1} / ${currentModalPhotos.length}`;
 
-      // Also update Fullscreen Lightbox if it's currently open
       updateFullscreenSlide();
 
-      // Update thumbnail active indicators
       const thumbs = document.querySelectorAll('#modalThumbnails .modal-thumb-item');
       thumbs.forEach((thumb, idx) => {
         if (idx === currentSlideIndex) {
@@ -2107,7 +2157,6 @@ Query: ${msg}`);
       updateModalSlide();
     }
 
-    /* Fullscreen Lightbox Functions */
     function openFullscreenPhoto() {
       if (!currentModalPhotos || currentModalPhotos.length === 0) return;
       const fsModal = document.getElementById('fullscreenPhotoModal');
@@ -2209,13 +2258,15 @@ Location: ${item.location}
       setTimeout(() => {
         let ans = "Thank you for reaching out! For direct site visits and verified Guwahati properties, call or WhatsApp our central desk at +91 6003523175.";
         if (text.includes("address") || text.includes("location") || text.includes("office") || text.includes("where")) {
-          ans = "📍 Our headquarters address is:\nAnuradha Barnachal Path, Guwahati, Assam - 781021.";
+          ans = "📍 Our headquarters address is:\nAnuradha, Guwahati, Assam - 781021.";
         } else if (text.includes("phone") || text.includes("number") || text.includes("whatsapp") || text.includes("call") || text.includes("contact")) {
           ans = "📞 Direct Helpline / WhatsApp Hotline:\nReach our central desk 24/7 at +91 6003523175.";
+        } else if (text.includes("dealer") || text.includes("agent") || text.includes("partner") || text.includes("broker")) {
+          ans = "Dealers and channel partners can register directly via the 'Register / Dealer' button on the navigation bar by entering their Company/Agency details.";
         } else if (text.includes("flat") || text.includes("bhk") || text.includes("price") || text.includes("rate") || text.includes("rent") || text.includes("buy")) {
           ans = `Currently ${properties.length} verified luxury properties are active in our Guwahati portfolio. Use the top filter console to browse 2BHK, 3BHK, or luxury villas.`;
         } else if (text.includes("list") || text.includes("owner") || text.includes("sell") || text.includes("post")) {
-          ans = "To list your house, click 'Owner Register' at the top bar. You can upload 4+ photos directly from your phone gallery with verified pricing.";
+          ans = "To list your house, click 'Register / Dealer' at the top bar. You can upload 4+ photos directly from your phone gallery with verified pricing.";
         }
         appendChatMsg(ans, false);
       }, 400);
