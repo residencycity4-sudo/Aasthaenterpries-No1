@@ -103,7 +103,7 @@
       </div>
       <h3 class="font-heading text-lg font-bold text-white mb-2">Delete Property?</h3>
       <p class="text-xs text-gray-300 mb-6 leading-relaxed">
-        Are you sure you want to permanently delete this listing? It will be removed immediately from the cloud database and all devices.
+        Are you sure you want to permanently delete this listing? It will be removed immediately from the database and all devices.
       </p>
       <div class="flex gap-3">
         <button type="button" onclick="closeDeleteConfirmModal()" class="flex-1 py-2.5 px-4 rounded-xl border border-white/20 text-gray-300 hover:text-white text-xs font-semibold glass-chip transition">
@@ -237,14 +237,14 @@
             Cancel
           </button>
           <button type="submit" id="editSubmitBtn" class="flex-1 py-3 rounded-xl gold-btn text-xs font-bold transition shadow-lg">
-            Save Changes to Cloud
+            Save Changes
           </button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- ================= RESPONSIVE NAVIGATION BAR (FIXED FOR NO MOBILE OVERFLOW) ================= -->
+  <!-- ================= RESPONSIVE NAVIGATION BAR ================= -->
   <header class="sticky top-0 z-50 glass-nav w-full">
     <div class="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2">
       
@@ -273,26 +273,23 @@
         <a href="#contactSection" class="hover:text-brand-gold transition">Guwahati Office</a>
       </nav>
 
-      <!-- Right Controls (Flex without overflow) -->
+      <!-- Right Controls -->
       <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0 max-w-full">
         
-        <!-- Standalone King Admin Trigger Button (Auto-hides if logged in as Admin) -->
         <button id="btnKingAdminTrigger" onclick="triggerKingAdmin()" class="king-badge px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold flex items-center gap-1 shadow-md shrink-0">
           <i class="fa-solid fa-crown text-amber-400 text-xs"></i>
           <span>King Admin</span>
         </button>
 
-        <!-- Logged Out Desktop Action Buttons -->
         <div id="navAuthLoggedOut" class="hidden sm:flex items-center gap-2">
           <button onclick="openAuthModal('login')" class="px-2.5 py-1.5 text-xs font-semibold text-gray-300 hover:text-white transition">
             Sign In
           </button>
-          <button onclick="openAuthModal('signup')" class="gold-btn px-3 py-1.5 rounded-xl text-xs flex items-center gap-1 shadow-md">
-            Register / Dealer
+          <button onclick="openAuthModal('signup')" class="gold-btn px-3 py-1.5 rounded-xl text-xs flex items-center gap-1 shadow-md whitespace-nowrap">
+            Register / Dealer / Owner
           </button>
         </div>
 
-        <!-- Logged In Controls (Compact on Mobile) -->
         <div id="navAuthLoggedIn" class="hidden flex items-center gap-1.5 sm:gap-2">
           <button onclick="openUserDashboard()" class="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-[10px] sm:text-xs font-bold border border-brand-gold/40 text-brand-gold transition whitespace-nowrap">
             <i class="fa-solid fa-gauge-high mr-1"></i> <span id="navRoleTitle">Dashboard</span>
@@ -302,12 +299,10 @@
           </button>
         </div>
 
-        <!-- AI Assistant Icon -->
         <button onclick="toggleChatbot()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl glass-chip flex items-center justify-center text-amber-400 hover:bg-amber-400 hover:text-black transition shadow-md shrink-0" title="AI Assistant">
           <i class="fa-solid fa-robot text-xs sm:text-sm"></i>
         </button>
 
-        <!-- Mobile Drawer Toggle -->
         <button onclick="toggleMobileNav()" class="lg:hidden w-8 h-8 sm:w-9 sm:h-9 rounded-xl glass-chip flex items-center justify-center text-white text-sm shrink-0">
           <i class="fa-solid fa-bars"></i>
         </button>
@@ -320,8 +315,8 @@
         <button onclick="openAuthModal('login'); toggleMobileNav();" class="flex-1 py-2 glass-chip rounded-xl text-xs font-semibold text-white">
           Sign In
         </button>
-        <button onclick="openAuthModal('signup'); toggleMobileNav();" class="flex-1 py-2 gold-btn rounded-xl text-xs font-bold">
-          Register / Dealer
+        <button onclick="openAuthModal('signup'); toggleMobileNav();" class="flex-1 py-2 gold-btn rounded-xl text-xs font-bold whitespace-nowrap">
+          Register / Dealer / Owner
         </button>
       </div>
       <a href="#propertiesSection" onclick="toggleMobileNav()" class="block py-1.5 text-gray-200">Browse Properties</a>
@@ -402,7 +397,7 @@
         <div class="relative z-10 w-full max-w-4xl mx-auto text-center">
           <div class="inline-flex items-center gap-2 py-1.5 px-3.5 rounded-full glass-chip text-amber-400 text-xs font-semibold uppercase tracking-widest mb-6 shadow-md">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            Guwahati's Verified Housing Network &bull; Cloud Synced
+            Guwahati's Verified Housing Network &bull; Premier Living
           </div>
 
           <h1 class="font-heading text-3xl sm:text-6xl lg:text-7xl font-black leading-tight mb-4 tracking-tight text-white drop-shadow-xl">
@@ -471,7 +466,7 @@
             <h2 class="font-heading text-2xl sm:text-4xl font-bold text-white">Featured Guwahati Properties</h2>
           </div>
           <span id="counterBadge" class="text-xs font-mono text-gray-300 glass-chip px-3 py-1.5 rounded-full">
-            Syncing live cloud...
+            Verified Portfolio
           </span>
         </div>
 
@@ -495,7 +490,7 @@
                 <i class="fa-brands fa-whatsapp"></i>
               </div>
               <h4 class="font-heading text-lg font-bold text-white mb-2">Direct Headquarters Hotline</h4>
-              <p class="text-xs text-gray-300 leading-relaxed">All inquiries are dispatched directly to our WhatsApp hotline at +91 6003523175 with complete property details.</p>
+              <p class="text-xs text-gray-300 leading-relaxed">All inquiries are dispatched directly to our central advisory desk with complete property details and instant scheduling.</p>
             </div>
 
             <div class="p-6 rounded-3xl glass-console hover:border-amber-400/50 transition">
@@ -549,7 +544,7 @@
                   <i class="fa-solid fa-phone"></i>
                 </div>
                 <div>
-                  <div class="text-[10px] uppercase text-gray-400 font-semibold">Inquiry Phone & WhatsApp</div>
+                  <div class="text-[10px] uppercase text-gray-400 font-semibold">Direct Call Helpline</div>
                   <div class="text-sm font-semibold text-white">+91 6003523175</div>
                 </div>
               </div>
@@ -559,7 +554,7 @@
           <!-- Callback Request Form -->
           <div class="glass-console p-6 sm:p-8 rounded-3xl shadow-xl">
             <h4 class="font-heading text-lg font-bold text-white mb-1.5">Request Priority Callback</h4>
-            <p class="text-xs text-gray-300 mb-5">Your inquiry will be dispatched directly to WhatsApp at +91 6003523175.</p>
+            <p class="text-xs text-gray-300 mb-5">Your inquiry will be dispatched directly to our priority advisory desk.</p>
             
             <form onsubmit="handleContactLead(event)" class="space-y-3.5">
               <div>
@@ -575,7 +570,7 @@
                 <textarea id="leadMsg" rows="3" placeholder="e.g. 2BHK / 3BHK luxury apartment required in Guwahati near Barnachal Path..." class="w-full bg-black/50 border border-white/20 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400"></textarea>
               </div>
               <button type="submit" class="w-full gold-btn py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2">
-                <i class="fa-brands fa-whatsapp text-sm"></i> Send to WhatsApp Desk (+91 6003523175)
+                <i class="fa-brands fa-whatsapp text-sm"></i> Send to Official WhatsApp Desk
               </button>
             </form>
           </div>
@@ -584,7 +579,7 @@
 
     </div>
 
-    <!-- 2. OWNER & DEALER PORTAL (SHARED INVENTORY WORKBENCH) -->
+    <!-- 2. OWNER & DEALER PORTAL -->
     <div id="viewOwnerDashboard" class="hidden w-full max-w-6xl mx-auto px-4 py-12">
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-white/10 pb-5 mb-8 gap-4">
         <div>
@@ -609,13 +604,13 @@
           <div id="ownerMyListingsCount" class="text-3xl font-bold text-amber-400 mt-1">0</div>
         </div>
         <div class="glass-sheet p-5 rounded-2xl">
-          <div class="text-gray-300 text-xs">Aastha Inquiries Line</div>
-          <div class="text-base sm:text-lg font-bold text-white mt-1">+91 6003523175</div>
+          <div class="text-gray-300 text-xs">Aastha Advisory Line</div>
+          <div class="text-base sm:text-lg font-bold text-white mt-1">Central Advisory Desk</div>
         </div>
         <div class="glass-sheet p-5 rounded-2xl">
-          <div class="text-gray-300 text-xs">Cloud Status</div>
+          <div class="text-gray-300 text-xs">Platform Status</div>
           <div class="text-sm font-bold text-emerald-400 mt-1 flex items-center gap-1.5">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Firebase Synced
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Verified & Active
           </div>
         </div>
       </div>
@@ -645,7 +640,7 @@
       <!-- Upload Listing Form -->
       <div id="uploadSection" class="glass-console p-6 sm:p-8 rounded-3xl shadow-xl">
         <h3 class="font-heading text-lg font-bold text-white mb-1.5 flex items-center gap-2">
-          <i class="fa-solid fa-cloud-arrow-up text-amber-400"></i> Upload New Property To Cloud
+          <i class="fa-solid fa-arrow-up-from-bracket text-amber-400"></i> Upload New Property Listing
         </h3>
         <p class="text-xs text-gray-300 mb-6">Select photos directly from your phone gallery or camera (supports 4+ HD photos).</p>
 
@@ -734,7 +729,7 @@
             <input type="file" id="galleryFileInput" multiple accept="image/*" class="hidden" onchange="handleGalleryFiles(event)">
             
             <button type="button" onclick="document.getElementById('galleryFileInput').click()" class="w-full py-4 border-2 border-dashed border-amber-400/40 hover:border-amber-400 rounded-2xl text-center bg-white/[0.02] hover:bg-white/[0.05] transition cursor-pointer flex flex-col items-center justify-center gap-1.5">
-              <i class="fa-solid fa-cloud-arrow-up text-2xl text-amber-400"></i>
+              <i class="fa-solid fa-images text-2xl text-amber-400"></i>
               <span class="text-xs font-semibold text-white">Tap here to choose photos from Gallery / Camera</span>
               <span class="text-[10px] text-gray-400">You can select multiple photos at once</span>
             </button>
@@ -774,7 +769,7 @@
           </div>
 
           <button type="submit" id="ownerSubmitBtn" class="w-full gold-btn py-3.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-lg">
-            <i class="fa-solid fa-cloud-arrow-up"></i> Upload & Sync to Cloud
+            <i class="fa-solid fa-arrow-up-from-bracket"></i> Publish Listing
           </button>
         </form>
       </div>
@@ -812,7 +807,7 @@
               <i class="fa-solid fa-crown"></i> Official In-House Upload
             </div>
             <h3 class="font-heading text-xl font-bold text-white">Direct Listing by Aastha Enterprises</h3>
-            <p class="text-xs text-gray-300">Property will be published directly under Aastha Enterprises HQ hotline (+91 6003523175).</p>
+            <p class="text-xs text-gray-300">Property will be published directly under Aastha Enterprises headquarters management.</p>
           </div>
           <button type="button" onclick="toggleAdminDirectUpload()" class="text-gray-400 hover:text-white text-xl p-2">
             <i class="fa-solid fa-xmark"></i>
@@ -927,7 +922,7 @@
           </div>
 
           <button type="submit" id="admSubmitBtn" class="w-full gold-btn py-3.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-xl">
-            <i class="fa-solid fa-crown"></i> Publish Listing by Aastha Enterprises (Live to Cloud)
+            <i class="fa-solid fa-crown"></i> Publish Listing by Aastha Enterprises
           </button>
         </form>
       </div>
@@ -987,7 +982,7 @@
       <div class="glass-sheet rounded-3xl overflow-hidden shadow-2xl">
         <div class="p-4 sm:p-5 border-b border-white/10 flex items-center justify-between">
           <h4 class="font-heading text-sm sm:text-base font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-comments text-emerald-400"></i> Customer Inquiries (Target: +91 6003523175)
+            <i class="fa-solid fa-comments text-emerald-400"></i> Customer Inquiries
           </h4>
         </div>
 
@@ -1025,7 +1020,7 @@
         <h3 class="text-lg font-bold text-white mb-2">Looking for exclusive houses in Guwahati?</h3>
         <p class="text-xs text-gray-300 max-w-md mx-auto mb-6">Connect directly with our Guwahati property desk with your requirements to access off-market listings.</p>
         <a href="https://wa.me/916003523175?text=Hi%20Aastha%20Enterprises,%20I%20am%20looking%20for%20a%20verified%20house%20in%20Guwahati" target="_blank" class="gold-btn px-6 py-3 rounded-xl text-xs inline-flex items-center gap-2">
-          <i class="fa-brands fa-whatsapp text-sm"></i> Chat with Guwahati Desk (+91 6003523175)
+          <i class="fa-brands fa-whatsapp text-sm"></i> Chat with Guwahati Desk
         </a>
       </div>
     </div>
@@ -1036,22 +1031,18 @@
   <div id="propModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-2xl overflow-y-auto">
     <div class="relative w-full max-w-4xl glass-console rounded-3xl overflow-hidden shadow-2xl my-8 border border-white/20">
       
-      <!-- Close Button -->
       <button onclick="closePropModal()" class="absolute top-4 right-4 z-30 w-9 h-9 rounded-full bg-black/75 text-white flex items-center justify-center hover:bg-amber-400 hover:text-black transition shadow-lg border border-white/20">
         <i class="fa-solid fa-xmark text-sm"></i>
       </button>
 
-      <!-- Full HD Interactive Photo Slider Screen -->
       <div id="modalSliderContainer" class="relative h-72 sm:h-[460px] md:h-[500px] w-full overflow-hidden bg-black flex items-center justify-center select-none">
         <img id="modalBgBlur" src="" alt="" class="absolute inset-0 w-full h-full object-cover filter blur-2xl opacity-35 scale-110 pointer-events-none transition-all duration-500">
         <img id="modalImg" src="" alt="Property" onclick="openFullscreenPhoto()" title="Tap to view Full Screen" class="relative z-10 max-h-full max-w-full w-auto h-auto object-contain cursor-zoom-in transition-all duration-300 drop-shadow-2xl hover:scale-[1.01]">
 
-        <!-- Fullscreen Tap Hint Badge -->
         <button type="button" onclick="openFullscreenPhoto()" class="absolute top-4 right-16 z-20 px-2.5 py-1 rounded-full text-[10px] font-bold bg-black/70 hover:bg-amber-400 hover:text-black text-gray-200 border border-white/20 backdrop-blur-md flex items-center gap-1.5 transition">
           <i class="fa-solid fa-expand text-xs"></i> <span>Full Screen</span>
         </button>
 
-        <!-- Slide Navigation Arrows -->
         <button type="button" onclick="prevSlide()" class="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/70 hover:bg-amber-400 hover:text-black text-white flex items-center justify-center transition backdrop-blur-md shadow-xl border border-white/20" title="Previous Photo">
           <i class="fa-solid fa-chevron-left text-sm"></i>
         </button>
@@ -1066,7 +1057,6 @@
         <div class="absolute bottom-3 left-3 right-3 z-20 flex gap-2 overflow-x-auto p-1.5 rounded-2xl bg-black/60 backdrop-blur-md border border-white/10" id="modalThumbnails"></div>
       </div>
 
-      <!-- Property Details Container -->
       <div class="p-5 sm:p-8">
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
           <div>
@@ -1080,7 +1070,6 @@
           </div>
         </div>
 
-        <!-- Watch Video Tour Action Banner -->
         <div id="modalVideoContainer" class="hidden mb-4">
           <a id="modalVideoBtn" href="#" target="_blank" class="w-full py-3 px-4 rounded-2xl bg-red-600/20 hover:bg-red-600/30 border border-red-500/50 text-red-400 hover:text-red-300 font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition">
             <i class="fa-solid fa-circle-play text-sm"></i> Watch Full Video Walkthrough / Reel
@@ -1114,7 +1103,7 @@
 
         <div class="pt-4 border-t border-white/10 flex flex-col sm:flex-row gap-3">
           <a id="modalWhatsAppBtn" href="#" target="_blank" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg transition">
-            <i class="fa-brands fa-whatsapp text-sm"></i> Send WhatsApp Inquiry (+91 6003523175)
+            <i class="fa-brands fa-whatsapp text-sm"></i> Send WhatsApp Inquiry
           </a>
           <button id="modalShareBtn" onclick="shareCurrentModalProperty()" class="px-4 py-3 border border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/15 font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition" title="Share via WhatsApp">
             <i class="fa-solid fa-share-nodes text-xs"></i> Share
@@ -1178,7 +1167,7 @@
       </div>
       <div class="flex flex-wrap gap-1.5 pt-1">
         <button onclick="sendQuickPrompt('Office address?')" class="text-[10px] glass-chip px-2.5 py-1 rounded-lg text-amber-300 hover:bg-white/10">📍 Office Address</button>
-        <button onclick="sendQuickPrompt('Helpline contact number?')" class="text-[10px] glass-chip px-2.5 py-1 rounded-lg text-amber-300 hover:bg-white/10">📞 Phone / WhatsApp</button>
+        <button onclick="sendQuickPrompt('Helpline contact desk?')" class="text-[10px] glass-chip px-2.5 py-1 rounded-lg text-amber-300 hover:bg-white/10">📞 Direct Desk</button>
         <button onclick="sendQuickPrompt('How to list my house?')" class="text-[10px] glass-chip px-2.5 py-1 rounded-lg text-amber-300 hover:bg-white/10">🏠 List House</button>
       </div>
     </div>
@@ -1228,7 +1217,7 @@
         <p class="text-xs leading-relaxed max-w-sm mb-4 text-gray-300">
           Guwahati's reliable residential and commercial housing platform. Verified properties, transparent deals, and direct WhatsApp connectivity.
         </p>
-        <p class="text-[11px] text-gray-500">Connected to Firebase Realtime Cloud</p>
+        <p class="text-[11px] text-gray-500">Guwahati's Verified Real Estate Network</p>
       </div>
 
       <div>
@@ -1253,7 +1242,7 @@
         </p>
         <p class="text-gray-300">
           <i class="fa-brands fa-whatsapp text-emerald-400 mr-1.5"></i>
-          <a href="https://wa.me/916003523175" target="_blank" class="hover:text-white">+91 6003523175</a>
+          <a href="https://wa.me/916003523175" target="_blank" class="hover:text-white">Direct WhatsApp Assistance</a>
         </p>
       </div>
     </div>
@@ -1329,12 +1318,10 @@
     let currentUser = JSON.parse(localStorage.getItem('aastha_active_user')) || null;
     let selectedDeal = 'All';
 
-    // Staging arrays for photos
     let selectedGalleryBase64 = [];
     let selectedAdminGalleryBase64 = [];
     let stagedEditPhotos = [];
 
-    // Modal Slider & Fullscreen State
     let currentModalPhotos = [];
     let currentSlideIndex = 0;
     let currentModalPropertyId = null;
@@ -1344,7 +1331,7 @@
 
     let reviews = JSON.parse(localStorage.getItem('aastha_reviews_db')) || [
       { name: "Kaushik Borah", stars: 5, text: "Aastha Enterprises helped me finalize my 3BHK in Barnachal Path within a week! Clear paperwork and verified title." },
-      { name: "Rituparna Sharma", stars: 5, text: "Direct WhatsApp support at +91 6003523175 is remarkably fast and genuine." }
+      { name: "Rituparna Sharma", stars: 5, text: "Direct WhatsApp support is remarkably fast and genuine." }
     ];
 
     /* =======================================================
@@ -1736,7 +1723,7 @@ Direct Hotline / Inquiries: +91 6003523175`;
         showToast("Updated locally: " + err.message, "error");
         closeEditPropertyModal();
       } finally {
-        btn.innerHTML = `Save Changes to Cloud`;
+        btn.innerHTML = `Save Changes`;
         btn.disabled = false;
       }
     }
@@ -1793,7 +1780,7 @@ Direct Hotline / Inquiries: +91 6003523175`;
     }
 
     /* =======================================================
-       7. KING ADMIN & AUTHENTICATION (WITH NO MOBILE CROP)
+       7. KING ADMIN & AUTHENTICATION
     ======================================================= */
     function triggerKingAdmin() {
       if (currentUser && currentUser.role === 'admin') {
@@ -1950,7 +1937,6 @@ Direct Hotline / Inquiries: +91 6003523175`;
         if (loggedOutBox) loggedOutBox.classList.add('hidden');
         if (loggedInBox) loggedInBox.classList.remove('hidden');
 
-        // Prevent Duplicate Admin Buttons on screen to fix mobile overflow
         if (currentUser.role === 'admin') {
           if (triggerBtn) triggerBtn.classList.add('hidden');
           roleTitle.innerText = "👑 Admin";
@@ -2265,7 +2251,7 @@ Please share site-visit availability.`);
     async function handleOwnerUpload(e) {
       e.preventDefault();
       const btn = document.getElementById('ownerSubmitBtn');
-      btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Syncing to Cloud...`;
+      btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Publishing...`;
       btn.disabled = true;
 
       const ownerName = document.getElementById('propOwnerName').value.trim();
@@ -2320,7 +2306,7 @@ Please share site-visit availability.`);
       try {
         const docRef = await db.collection("properties").add(newListing);
         newListing.id = docRef.id;
-        showToast(`🎉 Property with ${finalPhotos.length} photos live in cloud!`);
+        showToast(`🎉 Property with ${finalPhotos.length} photos live in catalog!`);
         e.target.reset();
         selectedGalleryBase64 = [];
         renderGalleryPreview();
@@ -2335,7 +2321,7 @@ Please share site-visit availability.`);
         selectedGalleryBase64 = [];
         renderGalleryPreview();
       } finally {
-        btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Upload & Sync to Cloud`;
+        btn.innerHTML = `<i class="fa-solid fa-arrow-up-from-bracket"></i> Publish Listing`;
         btn.disabled = false;
       }
     }
@@ -2412,7 +2398,7 @@ Please share site-visit availability.`);
         renderAdminGalleryPreview();
         toggleAdminDirectUpload();
       } finally {
-        btn.innerHTML = `<i class="fa-solid fa-crown"></i> Publish Listing by Aastha Enterprises (Live to Cloud)`;
+        btn.innerHTML = `<i class="fa-solid fa-crown"></i> Publish Listing by Aastha Enterprises`;
         btn.disabled = false;
       }
     }
@@ -2439,7 +2425,7 @@ Please share site-visit availability.`);
         inquiries.unshift(lead);
       }
 
-      showToast("Redirecting to WhatsApp Hotline +91 6003523175...");
+      showToast("Redirecting to WhatsApp Hotline...");
       const text = encodeURIComponent(`*New Callback Request - Aastha Enterprises*
 Name: ${name}
 Phone: ${phone}
@@ -2603,17 +2589,17 @@ Location: ${item.location}
       input.value = '';
 
       setTimeout(() => {
-        let ans = "Thank you for reaching out! For direct site visits and verified Guwahati properties, call or WhatsApp our central desk at +91 6003523175.";
+        let ans = "Thank you for reaching out! For direct site visits and verified Guwahati properties, connect directly with our central advisory desk.";
         if (text.includes("address") || text.includes("location") || text.includes("office") || text.includes("where")) {
           ans = "📍 Our headquarters address is:\nAnuradha, Guwahati, Assam - 781021.";
         } else if (text.includes("phone") || text.includes("number") || text.includes("whatsapp") || text.includes("call") || text.includes("contact")) {
-          ans = "📞 Direct Helpline / WhatsApp Hotline:\nReach our central desk 24/7 at +91 6003523175.";
+          ans = "📞 Direct Helpline / WhatsApp Assistance:\nReach our central advisory desk anytime via the direct call or WhatsApp button.";
         } else if (text.includes("dealer") || text.includes("agent") || text.includes("partner") || text.includes("broker")) {
-          ans = "Dealers and channel partners can register directly via the 'Register / Dealer' button on the navigation bar by entering their Company/Agency details.";
+          ans = "Dealers and channel partners can register directly via the 'Register / Dealer / Owner' button on the navigation bar by entering their Company/Agency details.";
         } else if (text.includes("flat") || text.includes("bhk") || text.includes("price") || text.includes("rate") || text.includes("rent") || text.includes("buy")) {
           ans = `Currently ${properties.length} verified luxury properties are active in our Guwahati portfolio. Use the top filter console to browse 2BHK, 3BHK, or luxury villas.`;
         } else if (text.includes("list") || text.includes("owner") || text.includes("sell") || text.includes("post")) {
-          ans = "To list your house, click 'Register / Dealer' at the top bar. You can upload 4+ photos directly from your phone gallery with verified pricing and video walkthrough links.";
+          ans = "To list your house, click 'Register / Dealer / Owner' at the top bar. You can upload 4+ photos directly from your phone gallery with verified pricing and video walkthrough links.";
         }
         appendChatMsg(ans, false);
       }, 400);
@@ -2668,6 +2654,18 @@ Location: ${item.location}
       e.preventDefault();
       const author = document.getElementById('revAuthor').value.trim();
       const stars = parseInt(document.getElementById('revStars').value);
+      const text = document.getElementById('revText').value.trim();
+      reviews.unshift({ name: author, stars, text });
+      localStorage.setItem('aastha_reviews_db', JSON.stringify(reviews));
+      showToast("Thank you for your review!");
+      closeReviewModal();
+      renderReviews();
+      e.target.reset();
+    }
+  </script>
+</body>
+</html>
+s = parseInt(document.getElementById('revStars').value);
       const text = document.getElementById('revText').value.trim();
       reviews.unshift({ name: author, stars, text });
       localStorage.setItem('aastha_reviews_db', JSON.stringify(reviews));
