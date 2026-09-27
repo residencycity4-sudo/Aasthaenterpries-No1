@@ -2665,15 +2665,3 @@ Location: ${item.location}
   </script>
 </body>
 </html>
-s = parseInt(document.getElementById('revStars').value);
-      const text = document.getElementById('revText').value.trim();
-      reviews.unshift({ name: author, stars, text });
-      localStorage.setItem('aastha_reviews_db', JSON.stringify(reviews));
-      showToast("Thank you for your review!");
-      closeReviewModal();
-      renderReviews();
-      e.target.reset();
-    }
-  </script>
-</body>
-</html>
